@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:app_vendedores_frontend/administrador/adminMain.dart';
+import 'package:app_vendedores_frontend/vendedor/vendedorMain.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -32,8 +35,17 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = '';
 
+  // Determinar la URL del backend según la plataforma
+  String getApiUrl() {
+    if (Platform.isAndroid) {
+      return 'http://10.0.2.2:8000/api/login/'; // Para emulador Android
+    } else {
+      return 'http://127.0.0.1:8000/api/login/'; // Para escritorio o navegador
+    }
+  }
+
   Future<void> _login() async {
-    final String apiUrl = 'http://10.0.2.2:8000/api/login/';
+    final String apiUrl = getApiUrl(); // Obtiene la URL correcta
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},
@@ -97,30 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class AdminScreen extends StatelessWidget {
-  const AdminScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Administrador')),
-      body: const Center(child: Text('Administrador', style: TextStyle(fontSize: 24))),
-    );
-  }
-}
-
-class SellerScreen extends StatelessWidget {
-  const SellerScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Vendedor')),
-      body: const Center(child: Text('Vendedor', style: TextStyle(fontSize: 24))),
     );
   }
 }
