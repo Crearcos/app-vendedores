@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.contrib.auth import authenticate
+from django.core.mail import send_mail
 
 @csrf_exempt
 def login_view(request):
@@ -52,6 +53,7 @@ def generate_random_password(length=10):
 def register_user(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        name = data.get('name')
         email = data.get('email')
         role = data.get('role')
 
@@ -64,10 +66,19 @@ def register_user(request):
         print(f"Contraseña generada para {email}: {random_password}")  # Imprimir en la terminal
 
         # Crear usuario en auth_user
-        user = User.objects.create_user(username=email, email=email, password=random_password)
+        user = User.objects.create_user(username=name, email=email, password=random_password)
 
         # Asignar rol en usuarios_userprofile
         UserProfile.objects.create(user=user, role=role)
+
+        # **Enviar correo con la contraseña**
+        send_mail(
+            'Registro exitoso en la plataforma App Vendedores',
+            f'Hola {name},\n\nTu cuenta ha sido creada.\n\nCorreo: {email}\nContraseña: {random_password}\n\nPor favor, cambia tu contraseña después de iniciar sesión.',
+            'soporte@crearcos.com',  # Remitente
+            [email],  # Destinatario
+            fail_silently=False,
+        )
 
         return JsonResponse({"status": 0, "message": "Usuario registrado exitosamente"})
 
