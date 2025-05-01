@@ -1,4 +1,4 @@
-import 'package:app_vendedores_frontend/vendedor//registrar_empresa.dart';
+import 'package:app_vendedores_frontend/vendedor/registrar_empresa.dart';
 import 'package:flutter/material.dart';
 
 class SellerScreen extends StatelessWidget {
@@ -20,7 +20,7 @@ class SellerScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const RegisterUserScreen()),
+                  MaterialPageRoute(builder: (context) => const RegistroEmpresaPage()),
                 );
               },
               child: const Text("Registrar nueva empresa"),
