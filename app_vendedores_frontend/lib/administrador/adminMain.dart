@@ -31,5 +31,3 @@ class AdminScreen extends StatelessWidget {
     );
   }
 }
-
-// Comentario
