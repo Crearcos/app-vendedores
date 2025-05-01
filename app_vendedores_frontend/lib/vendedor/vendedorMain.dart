@@ -1,5 +1,5 @@
-import 'package:app_vendedores_frontend/vendedor/registrar_empresa.dart';
 import 'package:flutter/material.dart';
+import 'package:app_vendedores_frontend/vendedor/registrar_empresa.dart';
 
 class SellerScreen extends StatelessWidget {
   const SellerScreen({super.key});
@@ -14,10 +14,9 @@ class SellerScreen extends StatelessWidget {
           children: [
             const Text('Vendedor', style: TextStyle(fontSize: 24)),
             const SizedBox(height: 16),
-
-            // Botón para ir a la pantalla de registro de empresa
             ElevatedButton(
               onPressed: () {
+                print("Navegando a RegistroEmpresaPage");
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const RegistroEmpresaPage()),
