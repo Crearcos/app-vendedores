@@ -36,7 +36,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       final data = jsonDecode(response.body);
       setState(() {
         _message = data["message"];

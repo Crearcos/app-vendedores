@@ -1,18 +1,18 @@
-# Create your views here.
 import random
 import string
+import json
 from django.contrib.auth.models import User
 from usuarios.models import UserProfile
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
-from django.contrib.auth import authenticate
 from django.core.mail import send_mail
+from django.contrib.auth import authenticate
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from usuarios.serializers import UserSerializer, UserProfileSerializer
 
-@csrf_exempt
-def login_view(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
+class LoginView(APIView):
+    def post(self, request):
+        data = request.data
         email = data.get('email')
         password = data.get('password')
 
@@ -20,66 +20,48 @@ def login_view(request):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return JsonResponse({"status": -1, "message": "Usuario y/o contraseña incorrectos"})  # No existe el usuario
+            return Response({"status": -1, "message": "Usuario y/o contraseña incorrectos"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Validar contraseña usando Django
+        # Validar contraseña
         user = authenticate(username=user.username, password=password)
         if user is None:
-            return JsonResponse({"status": -1, "message": "Usuario y/o contraseña incorrectos"})  # Contraseña incorrecta
+            return Response({"status": -1, "message": "Usuario y/o contraseña incorrectos"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Obtener rol desde UserProfile
+        # Obtener perfil
         try:
             profile = UserProfile.objects.get(user=user)
             role = profile.role
         except UserProfile.DoesNotExist:
-            return JsonResponse({"status": -1, "message": "El usuario no tiene un rol asignado"})  # No tiene perfil
+            return Response({"status": -1, "message": "El usuario no tiene un rol asignado"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Determinar respuesta según el rol
-        if role == "admin":
-            return JsonResponse({"status": 0, "message": "Bienvenido Administrador"})
-        elif role == "seller":
-            return JsonResponse({"status": 1, "message": "Bienvenido Vendedor"})
+        # Respuesta según el rol
+        response_data = {"status": 0 if role == "admin" else 1, "message": f"Bienvenido {role.capitalize()}"}
+        return Response(response_data, status=status.HTTP_200_OK)
 
-        return JsonResponse({"status": -1, "message": "Rol desconocido"})  # Si el rol no es válido
-
-    return JsonResponse({"error": "Método no permitido"}, status=405)
-
-def generate_random_password(length=10):
-    """Genera una contraseña aleatoria."""
-    characters = string.ascii_letters + string.digits + string.punctuation
-    return ''.join(random.choice(characters) for i in range(length))
-
-@csrf_exempt
-def register_user(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
+class RegisterUserView(APIView):
+    def post(self, request):
+        data = request.data
         name = data.get('name')
         email = data.get('email')
         role = data.get('role')
 
-        # Verificar si el usuario ya existe
         if User.objects.filter(email=email).exists():
-            return JsonResponse({"status": -1, "message": "El correo ya está registrado"})
+            return Response({"status": -1, "message": "El correo ya está registrado"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Generar una contraseña aleatoria
-        random_password = generate_random_password()
-        print(f"Contraseña generada para {email}: {random_password}")  # Imprimir en la terminal
+        # Generar contraseña aleatoria
+        random_password = ''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(10))
 
-        # Crear usuario en auth_user
+        # Crear usuario y perfil
         user = User.objects.create_user(username=name, email=email, password=random_password)
-
-        # Asignar rol en usuarios_userprofile
         UserProfile.objects.create(user=user, role=role)
 
-        # **Enviar correo con la contraseña**
+        # Enviar correo
         send_mail(
             'Registro exitoso en la plataforma App Vendedores',
-            f'Hola {name},\n\nTu cuenta ha sido creada.\n\nCorreo: {email}\nContraseña: {random_password}\n\nPor favor, cambia tu contraseña después de iniciar sesión.',
-            'soporte@crearcos.com',  # Remitente
-            [email],  # Destinatario
+            f'Hola {name},\n\nTu cuenta ha sido creada.\nCorreo: {email}\nContraseña: {random_password}\n\nPor favor, cambia tu contraseña después de iniciar sesión.',
+            'soporte@crearcos.com',
+            [email],
             fail_silently=False,
         )
 
-        return JsonResponse({"status": 0, "message": "Usuario registrado exitosamente"})
-
-    return JsonResponse({"error": "Método no permitido"}, status=405)
+        return Response({"status": 0, "message": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
