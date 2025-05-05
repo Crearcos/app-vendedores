@@ -14,6 +14,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   String _message = '';
   bool _hasSentEmail = false; // Indica si el correo ya fue enviado una vez
+  bool _isLoading = false; // Estado para bloquear el botón mientras se espera la respuesta
 
   // Determinar la URL del backend según la plataforma
   String getApiUrl() {
@@ -25,25 +26,39 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Future<void> _sendPasswordResetEmail() async {
+    setState(() {
+      _isLoading = true; // Bloquear el botón antes de la petición
+    });
     final String apiUrl = getApiUrl(); // Obtiene la URL correcta
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({"email": _emailController.text}),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": _emailController.text}),
+      );
+      final decodedResponse = utf8.decode(response.bodyBytes); // Decodificar para caracteres especiales
+      final data = jsonDecode(decodedResponse);
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          _message = data["message"];
+          _hasSentEmail = true; // Cambiar el texto del botón
+        });
+      } else {
+        setState(() {
+          _message = data["message"] ?? "Error al enviar el correo";
+        });
+      }
+    } catch (e) {
       setState(() {
-        _message = data["message"];
-        _hasSentEmail = true;
-      });
-    } else {
-      setState(() {
-        _message = "Error al enviar el correo";
+        _message = "Error de conexión con el servidor";
       });
     }
+
+    setState(() {
+      _isLoading = false; // Habilitar el botón nuevamente después de la respuesta
+    });
   }
 
   @override
@@ -65,12 +80,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             const SizedBox(height: 16),
 
+            // Botón de envio de correo deshabilitado mientras espera la respuesta
             ElevatedButton(
-              onPressed: _sendPasswordResetEmail,
-              child: Text(_hasSentEmail ? 'Reenviar correo' : 'Enviar correo'),
+              onPressed: _isLoading ? null : _sendPasswordResetEmail, // Si está cargando, el botón estará bloqueado
+              child: _isLoading
+                  ? const SizedBox(  // Mostrar un indicador de carga dentro del botón
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+                  : Text(_hasSentEmail ? 'Reenviar correo' : 'Enviar correo'),
             ),
             const SizedBox(height: 16),
-
             if (_message.isNotEmpty)
               Text(_message, style: const TextStyle(color: Colors.blue)),
           ],

@@ -13,6 +13,7 @@ class RegisterUserScreen extends StatefulWidget {
 class _RegisterUserScreenState extends State<RegisterUserScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  bool _isLoading = false; // Estado para bloquear el botón mientras se espera la respuesta
   String _selectedRole = "admin"; // Valor por defecto
   String _message = '';
 
@@ -25,28 +26,36 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   }
 
   Future<void> _registerUser() async {
+    setState(() {
+      _isLoading = true; // Bloquear el botón antes de la petición
+    });
     final String apiUrl = getApiUrl(); // Obtiene la URL correcta
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "name": _nameController.text,
-        "email": _emailController.text,
-        "role": _selectedRole,
-      }),
-    );
 
-    if (response.statusCode == 201) {
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": _nameController.text,
+          "email": _emailController.text,
+          "role": _selectedRole,
+        }),
+      );
       final decodedResponse = utf8.decode(response.bodyBytes);
       final data = jsonDecode(decodedResponse);
+
       setState(() {
-        _message = data["message"];
+        _message = data["message"] ?? "Error al enviar el correo";
       });
-    } else {
+    } catch (e) {
       setState(() {
         _message = "Error al registrar usuario";
       });
     }
+
+    setState(() {
+      _isLoading = false; // Habilitar el botón nuevamente después de la respuesta
+    });
   }
 
   @override
@@ -96,13 +105,18 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Botón de registro
+            // Botón de registro deshabilitado mientras espera la respuesta
             ElevatedButton(
-              onPressed: _registerUser,
-              child: const Text('Registrar Usuario'),
+              onPressed: _isLoading ? null : _registerUser, // Si está cargando, el botón estará bloqueado
+              child: _isLoading
+                  ? const SizedBox(  // Mostrar un indicador de carga dentro del botón
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+              )
+                  : Text('Registrar Usuario'),
             ),
             const SizedBox(height: 16),
-
             if (_message.isNotEmpty)
               Text(_message, style: const TextStyle(color: Colors.blue)),
           ],
