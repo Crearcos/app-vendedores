@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:app_vendedores_frontend/administrador/adminMain.dart';
 import 'package:app_vendedores_frontend/vendedor/vendedorMain.dart';
+import 'package:app_vendedores_frontend/recuperar_contrasena.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -105,7 +106,20 @@ class _LoginScreenState extends State<LoginScreen> {
             if (_errorMessage.isNotEmpty)
               Text(_errorMessage, style: const TextStyle(color: Colors.red)),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _login, child: const Text('Iniciar sesión')),
+            ElevatedButton(
+              onPressed: _login,
+              child: const Text('Iniciar sesión'),
+            ),
+            const SizedBox(width: 16),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+                );
+              },
+              child: const Text('¿Ha olvidado la contraseña?', style: TextStyle(color: Colors.blue)),
+            ),
           ],
         ),
       ),
