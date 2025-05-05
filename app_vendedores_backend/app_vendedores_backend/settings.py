@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-oqfqe4(-wc4ym5@&5t)8u8%7h1+oyl3_r=(3sm+6ux!=#=rv02
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+DEFAULT_CHARSET = 'utf-8'
+
 ALLOWED_HOSTS = ['127.0.0.1', '10.0.2.2', 'localhost']
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

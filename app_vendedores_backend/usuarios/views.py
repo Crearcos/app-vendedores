@@ -1,6 +1,5 @@
 import random
 import string
-import json
 from django.contrib.auth.models import User
 from usuarios.models import UserProfile
 from django.core.mail import send_mail
@@ -65,3 +64,30 @@ class RegisterUserView(APIView):
         )
 
         return Response({"status": 0, "message": "Usuario registrado exitosamente"}, status=status.HTTP_201_CREATED)
+
+class ResetPasswordView(APIView):
+    def post(self, request):
+        data = request.data
+        email = data.get('email')
+
+        # Verificar si el usuario existe
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"status": -1, "message": "El correo no está registrado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generar nueva contraseña aleatoria
+        new_password = ''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(10))
+        user.set_password(new_password)
+        user.save()
+
+        # Enviar correo con la nueva contraseña
+        send_mail(
+            'Recuperación de contraseña - App Vendedores',
+            f'Hola {user.username},\n\nTu nueva contraseña es:\n\n{new_password}\n\nPor favor, cambia tu contraseña después de iniciar sesión.',
+            'soporte@crearcos.com',  # Remitente
+            [email],  # Destinatario
+            fail_silently=False,
+        )
+
+        return Response({"status": 0, "message": "Correo enviado con la nueva contraseña"}, status=status.HTTP_200_OK)

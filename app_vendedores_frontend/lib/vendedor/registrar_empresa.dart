@@ -70,7 +70,8 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final responseData = jsonDecode(response.body);
+        final decodedResponse = utf8.decode(response.bodyBytes);
+        final responseData = jsonDecode(decodedResponse);
         setState(() {
           _message = responseData['message'] ?? 'Empresa registrada correctamente';
         });

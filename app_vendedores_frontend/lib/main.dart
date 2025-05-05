@@ -57,18 +57,21 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final decodedResponse = utf8.decode(response.bodyBytes);
+      final data = jsonDecode(decodedResponse);
       int status = data["status"];
 
-      if (status == -1) {
-        setState(() {
-          _errorMessage = "Usuario y/o contraseña incorrectos";
-        });
-      } else if (status == 0) {
+      if (status == 0) {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminScreen()));
       } else if (status == 1) {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const SellerScreen()));
       }
+    } else if (response.statusCode == 400) {
+      final decodedResponse = utf8.decode(response.bodyBytes);
+      final data = jsonDecode(decodedResponse);
+      setState(() {
+        _errorMessage = data["message"]; // Mostrar el mensaje de error de Django
+      });
     } else {
       setState(() {
         _errorMessage = "Error de conexión con el servidor";
