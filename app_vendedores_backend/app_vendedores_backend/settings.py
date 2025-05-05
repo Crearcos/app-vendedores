@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',  # Django REST Framework
     'corsheaders',     # CORS para peticiones HTTP
     'usuarios',        # Aplicación de usuarios
+    'empresas',  # Nuestra nueva app para manejar empresas
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+INSTALLED_APPS = [
+    ...
+    'rest_framework',
+    'usuarios',
+    'empresas',
+]
+
+AUTH_USER_MODEL = 'usuarios.Usuario'  # Para usar tu modelo personalizado
