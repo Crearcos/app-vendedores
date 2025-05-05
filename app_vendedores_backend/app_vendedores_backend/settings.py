@@ -27,6 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '10.0.2.2', 'localhost']
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.crearcos.com'  # Servidor de correo personalizado
+EMAIL_PORT = 465  # Puerto SMTP para envío de correos
+EMAIL_USE_SSL = True  # Activar SSL para seguridad (porque usaste puerto 465)
+EMAIL_HOST_USER = 'soporte@crearcos.com'  # Tu dirección de correo
+EMAIL_HOST_PASSWORD = '1GXuZMJ*7PeW8)kU'  # Usa una contraseña de aplicación en lugar de la normal !!
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Dirección predeterminada para enviar correos
 
 # Application definition
 

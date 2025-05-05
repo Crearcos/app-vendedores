@@ -11,6 +11,7 @@ class RegisterUserScreen extends StatefulWidget {
 }
 
 class _RegisterUserScreenState extends State<RegisterUserScreen> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   String _selectedRole = "admin"; // Valor por defecto
   String _message = '';
@@ -29,12 +30,13 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
+        "name": _nameController.text,
         "email": _emailController.text,
         "role": _selectedRole,
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       final data = jsonDecode(response.body);
       setState(() {
         _message = data["message"];
@@ -55,6 +57,17 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Campo de Nombre completo
+            TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Nombre completo',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.name,
+            ),
+            const SizedBox(height: 16),
+
             // Campo de correo
             TextField(
               controller: _emailController,
