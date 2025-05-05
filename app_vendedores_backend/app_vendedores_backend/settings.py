@@ -141,12 +141,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-INSTALLED_APPS = [
-    ...
-    'rest_framework',
-    'usuarios',
-    'empresas',
-]
-
-AUTH_USER_MODEL = 'usuarios.Usuario'  # Para usar tu modelo personalizado
