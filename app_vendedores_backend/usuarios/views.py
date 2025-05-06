@@ -91,3 +91,24 @@ class ResetPasswordView(APIView):
         )
 
         return Response({"status": 0, "message": "Correo enviado con la nueva contraseña"}, status=status.HTTP_200_OK)
+    
+class UserListView(APIView):
+    def get(self, request):
+        users = User.objects.all()
+        user_data = [{"username": u.username, "email": u.email} for u in users]
+        return Response(user_data, status=status.HTTP_200_OK)
+
+class DeleteUserView(APIView):
+    def post(self, request):
+        data = request.data
+        email = data.get('email')
+
+        try:
+            user = User.objects.get(email=email)
+            if user.username == request.user.username:  # Evitar eliminarse a sí mismo
+                return Response({"message": "No puedes eliminar tu propio usuario"}, status=status.HTTP_400_BAD_REQUEST)
+
+            user.delete()
+            return Response({"message": "Usuario eliminado correctamente"}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"message": "El usuario no existe"}, status=status.HTTP_400_BAD_REQUEST)

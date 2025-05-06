@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
       int status = data["status"];
 
       if (status == 0) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AdminScreen(adminEmail: _emailController.text)));
       } else if (status == 1) {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const SellerScreen()));
       }
