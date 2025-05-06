@@ -52,7 +52,7 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
     setState(() => _isLoading = true);
 
     final Map<String, dynamic> data = {
-      "empresa": empresaController.text.trim(),
+      "empresa_pyme": empresaController.text.trim(),
       "contacto": contactoController.text.trim(),
       "cargo": cargoController.text.trim(),
       "telefono": telefonoController.text.trim(),
@@ -78,7 +78,7 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
         _formKey.currentState!.reset();
         _clearControllers();
       } else {
-        setState(() => _message = 'Error al registrar empresa: ${response.statusCode}');
+        setState(() => _message = 'Error al registrar empresa: ${response.body}');
       }
     } catch (e) {
       setState(() => _message = 'Error de conexión: $e');

@@ -19,23 +19,19 @@ class Empresa(models.Model):
         ('VISITA', 'Visita Presencial'),
     ]
 
-    nombre = models.CharField(
+    empresa_pyme = models.CharField(
         max_length=255, 
         verbose_name='Nombre de la Empresa',
         help_text='Nombre legal registrado'
     )
-    nit = models.CharField(
-        max_length=20, 
-        unique=True,
-        verbose_name='NIT',
-        help_text='Número de Identificación Tributaria'
-    )
+
     tipo_empresa = models.CharField(
         max_length=50,
         choices=TIPO_EMPRESA_CHOICES,
         default='PYME',
         verbose_name='Tipo de Empresa'
     )
+
     giro = models.CharField(
         max_length=255,
         verbose_name='Giro Empresarial',
@@ -97,13 +93,13 @@ class Empresa(models.Model):
         verbose_name_plural = 'Empresas'
         ordering = ['-fecha_registro']
         indexes = [
-            models.Index(fields=['nombre']),
+            models.Index(fields=['empresa_pyme']),
             models.Index(fields=['ciudad']),
             models.Index(fields=['tipo_empresa']),
         ]
 
     def __str__(self):
-        return f"{self.nombre} ({self.get_tipo_empresa_display()})"
+        return f"{self.empresa_pyme} ({self.get_tipo_empresa_display()})"
 
     @property
     def contacto_completo(self):
