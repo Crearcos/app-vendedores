@@ -1,10 +1,6 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import EmpresaViewSet
-
-router = DefaultRouter()
-router.register(r'empresas', EmpresaViewSet)
+from django.urls import path
+from .views import EmpresaRegistroView  # Importar desde la app correcta
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('empresa/registro/', EmpresaRegistroView.as_view(), name='empresa_registro'),
 ]
