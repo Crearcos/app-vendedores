@@ -34,7 +34,7 @@ class LoginView(APIView):
             return Response({"status": -1, "message": "El usuario no tiene un rol asignado"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Respuesta según el rol
-        response_data = {"status": 0 if role == "admin" else 1, "message": f"Bienvenido {role.capitalize()}"}
+        response_data = {"status": 0 if role == "administrador" else 1, "message": f"Bienvenido {role.capitalize()}"}
         return Response(response_data, status=status.HTTP_200_OK)
 
 class RegisterUserView(APIView):
@@ -91,11 +91,25 @@ class ResetPasswordView(APIView):
         )
 
         return Response({"status": 0, "message": "Correo enviado con la nueva contraseña"}, status=status.HTTP_200_OK)
-    
+      
 class UserListView(APIView):
     def get(self, request):
         users = User.objects.all()
-        user_data = [{"username": u.username, "email": u.email} for u in users]
+        user_data = []
+
+        for user in users:
+            try:
+                profile = UserProfile.objects.get(user=user)
+                role = profile.role
+            except UserProfile.DoesNotExist:
+                role = "No asignado"
+
+            user_data.append({
+                "username": user.username,
+                "email": user.email,
+                "role": role
+            })
+
         return Response(user_data, status=status.HTTP_200_OK)
 
 class DeleteUserView(APIView):
@@ -112,3 +126,25 @@ class DeleteUserView(APIView):
             return Response({"message": "Usuario eliminado correctamente"}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({"message": "El usuario no existe"}, status=status.HTTP_400_BAD_REQUEST)
+
+class EditUserView(APIView):
+    def post(self, request):
+        data = request.data
+        email = data.get('email')
+        new_username = data.get('username')
+        new_role = data.get('role')
+
+        try:
+            user = User.objects.get(email=email)
+            user.username = new_username
+            user.save()
+
+            profile = UserProfile.objects.get(user=user)
+            profile.role = new_role
+            profile.save()
+
+            return Response({"message": "Usuario actualizado correctamente"}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"message": "El usuario no existe"}, status=status.HTTP_400_BAD_REQUEST)
+        except UserProfile.DoesNotExist:
+                return Response({"message": "El perfil de usuario no existe"}, status=status.HTTP_400_BAD_REQUEST)

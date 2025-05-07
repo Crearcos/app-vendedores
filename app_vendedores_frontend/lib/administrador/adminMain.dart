@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:app_vendedores_frontend/administrador/registrar_usuarios.dart';
 import 'package:app_vendedores_frontend/administrador/gestionar_usuarios.dart';
 
 class AdminScreen extends StatelessWidget {
@@ -18,24 +17,12 @@ class AdminScreen extends StatelessWidget {
             Text('Administrador: $adminEmail', style: const TextStyle(fontSize: 20)),
             const SizedBox(height: 16),
 
-            // Botón para registrar usuario
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RegisterUserScreen()),
-                );
-              },
-              child: const Text("Registrar nuevo usuario"),
-            ),
-            const SizedBox(height: 16),
-
             // Botón para gestionar usuarios
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ManageUsersScreen(adminEmail: adminEmail)), // **Envía el correo del admin**
+                  MaterialPageRoute(builder: (context) => ManageUsersScreen(adminEmail: adminEmail)), // Envía el correo del admin
                 );
               },
               child: const Text("Gestionar usuarios"),
