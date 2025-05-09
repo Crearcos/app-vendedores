@@ -13,24 +13,26 @@ class RegistroEmpresaPage extends StatefulWidget {
 class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController empresaController = TextEditingController();
-  final TextEditingController contactoController = TextEditingController();
+  final TextEditingController representanteController = TextEditingController();
   final TextEditingController cargoController = TextEditingController();
   final TextEditingController telefonoController = TextEditingController();
-  final TextEditingController especificacionController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController giroController = TextEditingController();
   final TextEditingController necesidadController = TextEditingController();
   final TextEditingController ciudadController = TextEditingController();
   final TextEditingController modoContactoController = TextEditingController();
 
   String _message = '';
-  bool _isLoading = false; // Estado de carga para mostrar el proceso
+  bool _isLoading = false;
 
   @override
   void dispose() {
     empresaController.dispose();
-    contactoController.dispose();
+    representanteController.dispose();
     cargoController.dispose();
     telefonoController.dispose();
-    especificacionController.dispose();
+    emailController.dispose();
+    giroController.dispose();
     necesidadController.dispose();
     ciudadController.dispose();
     modoContactoController.dispose();
@@ -52,12 +54,13 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
     setState(() => _isLoading = true);
 
     final Map<String, dynamic> data = {
-      "empresa_pyme": empresaController.text.trim(),
-      "contacto": contactoController.text.trim(),
+      "nombre_empresa": empresaController.text.trim(),
+      "representante": representanteController.text.trim(),
       "cargo": cargoController.text.trim(),
       "telefono": telefonoController.text.trim(),
-      "especificacion_negocio": especificacionController.text.trim(),
-      "necesidad_especificada": necesidadController.text.trim(),
+      "email": emailController.text.trim(),
+      "giro": giroController.text.trim(),
+      "necesidad_detectada": necesidadController.text.trim(),
       "ciudad": ciudadController.text.trim(),
       "modo_contacto": modoContactoController.text.trim(),
     };
@@ -69,16 +72,18 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
         body: jsonEncode(data),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final decodedResponse = utf8.decode(response.bodyBytes);
-        final responseData = jsonDecode(decodedResponse);
+      final decodedResponse = utf8.decode(response.bodyBytes);
+      final responseData = jsonDecode(decodedResponse);
+
+      if (response.statusCode == 201) {
         setState(() {
           _message = responseData['message'] ?? 'Empresa registrada correctamente';
         });
-        _formKey.currentState!.reset();
         _clearControllers();
       } else {
-        setState(() => _message = 'Error al registrar empresa: ${response.body}');
+        setState(() {
+          _message = responseData['message'] ?? 'Error al registrar empresa: ${response.body}';
+        });
       }
     } catch (e) {
       setState(() => _message = 'Error de conexión: $e');
@@ -89,10 +94,11 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
 
   void _clearControllers() {
     empresaController.clear();
-    contactoController.clear();
+    representanteController.clear();
     cargoController.clear();
     telefonoController.clear();
-    especificacionController.clear();
+    emailController.clear();
+    giroController.clear();
     necesidadController.clear();
     ciudadController.clear();
     modoContactoController.clear();
@@ -108,8 +114,8 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
           key: _formKey,
           child: Column(
             children: [
-              _buildTextField(empresaController, 'Empresa/Pyme'),
-              _buildTextField(contactoController, 'Contacto'),
+              _buildTextField(empresaController, 'Nombre de la Empresa'),
+              _buildTextField(representanteController, 'Representante'),
               _buildTextField(cargoController, 'Cargo'),
               _buildTextField(
                 telefonoController,
@@ -117,13 +123,14 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
                 keyboardType: TextInputType.phone,
                 validator: _validateTelefono,
               ),
-              _buildTextField(especificacionController, 'Especificación Negocio'),
-              _buildTextField(necesidadController, 'Necesidad Especificada'),
+              _buildTextField(emailController, 'Correo Electrónico', keyboardType: TextInputType.emailAddress),
+              _buildTextField(giroController, 'Giro Empresarial'),
+              _buildTextField(necesidadController, 'Necesidad Detectada'),
               _buildTextField(ciudadController, 'Ciudad'),
               _buildTextField(modoContactoController, 'Modo de Contacto'),
               const SizedBox(height: 20),
               _isLoading
-                  ? const CircularProgressIndicator() // Indicador de carga
+                  ? const CircularProgressIndicator()
                   : ElevatedButton(
                 onPressed: _guardarEmpresa,
                 child: const Text('Guardar Empresa/Cliente'),

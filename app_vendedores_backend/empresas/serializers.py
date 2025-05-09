@@ -2,10 +2,14 @@ from rest_framework import serializers
 from .models import Empresa
 
 class EmpresaSerializer(serializers.ModelSerializer):
+    modo_contacto = serializers.ChoiceField(choices=Empresa.MODO_CONTACTO_CHOICES, allow_blank=True, required=False)
+
+    telefono = serializers.CharField(
+        min_length=7, 
+        allow_blank=True, 
+        required=False
+    )
+
     class Meta:
         model = Empresa
-        fields = ['empresa_pyme', 'contacto', 'cargo', 'telefono', 'ciudad', 'modo_contacto']  # Solo los necesarios
-        extra_kwargs = {
-            'telefono': {'min_length': 7},
-            'modo_contacto': {'choices': Empresa.MODO_CONTACTO_CHOICES}
-        }
+        fields = ['nombre_empresa', 'representante', 'cargo', 'telefono', 'ciudad', 'modo_contacto', 'email']
