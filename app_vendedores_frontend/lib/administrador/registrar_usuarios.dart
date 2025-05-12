@@ -14,7 +14,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   bool _isLoading = false; // Estado para bloquear el botón mientras se espera la respuesta
-  String _selectedRole = "admin"; // Valor por defecto
+  String _selectedRole = "administrador"; // Valor por defecto
   String _message = '';
 
   String getApiUrl() {
@@ -99,8 +99,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                 });
               },
               items: const [
-                DropdownMenuItem(value: "admin", child: Text("Administrador")),
-                DropdownMenuItem(value: "seller", child: Text("Vendedor")),
+                DropdownMenuItem(value: "administrador", child: Text("Administrador")),
+                DropdownMenuItem(value: "vendedor", child: Text("Vendedor")),
               ],
             ),
             const SizedBox(height: 16),
