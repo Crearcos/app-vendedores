@@ -12,15 +12,40 @@ class RegistroEmpresaPage extends StatefulWidget {
 
 class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // Controladores para campos de texto
   final TextEditingController empresaController = TextEditingController();
+  final TextEditingController giroController = TextEditingController();
   final TextEditingController representanteController = TextEditingController();
   final TextEditingController cargoController = TextEditingController();
   final TextEditingController telefonoController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController giroController = TextEditingController();
+  final TextEditingController direccionController = TextEditingController();
   final TextEditingController necesidadController = TextEditingController();
-  final TextEditingController ciudadController = TextEditingController();
-  final TextEditingController modoContactoController = TextEditingController();
+  final TextEditingController productoServicioController = TextEditingController();
+  final TextEditingController proximaCitaController = TextEditingController();
+
+  // Listas para dropdowns (tipo empresa y modo contacto)
+  final List<Map<String, String>> tiposEmpresa = [
+    {'value': 'PYME', 'label': 'Pequeña y Mediana Empresa'},
+    {'value': 'CORP', 'label': 'Corporación'},
+    {'value': 'STARTUP', 'label': 'Startup'},
+    {'value': 'ONG', 'label': 'Organización No Gubernamental'},
+    {'value': 'GUB', 'label': 'Entidad Gubernamental'},
+    {'value': 'OTRO', 'label': 'Otro tipo de organización'},
+  ];
+
+  final List<Map<String, String>> modosContacto = [
+    {'value': 'EMAIL', 'label': 'Correo Electrónico'},
+    {'value': 'WHATSAPP', 'label': 'WhatsApp'},
+    {'value': 'LLAMADA', 'label': 'Llamada Telefónica'},
+    {'value': 'VISITA', 'label': 'Visita Presencial'},
+    {'value': 'VIDEOCALL', 'label': 'Videollamada'},
+  ];
+
+  // Variables para almacenar selección dropdown
+  String? _tipoEmpresaSeleccionado;
+  String? _modoContactoSeleccionado;
 
   String _message = '';
   bool _isLoading = false;
@@ -28,14 +53,15 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
   @override
   void dispose() {
     empresaController.dispose();
+    giroController.dispose();
     representanteController.dispose();
     cargoController.dispose();
     telefonoController.dispose();
     emailController.dispose();
-    giroController.dispose();
+    direccionController.dispose();
     necesidadController.dispose();
-    ciudadController.dispose();
-    modoContactoController.dispose();
+    productoServicioController.dispose();
+    proximaCitaController.dispose();
     super.dispose();
   }
 
@@ -47,22 +73,38 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
 
   Future<void> _guardarEmpresa() async {
     if (!_formKey.currentState!.validate()) {
-      setState(() => _message = 'Por favor, complete todos los campos correctamente.');
+      setState(() => _message = 'Por favor, complete todos los campos obligatorios correctamente.');
       return;
     }
 
-    setState(() => _isLoading = true);
+    if (_tipoEmpresaSeleccionado == null) {
+      setState(() => _message = 'Por favor, seleccione un Tipo de Empresa.');
+      return;
+    }
+
+    if (_modoContactoSeleccionado == null) {
+      setState(() => _message = 'Por favor, seleccione un Modo de Contacto.');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _message = '';
+    });
 
     final Map<String, dynamic> data = {
       "nombre_empresa": empresaController.text.trim(),
+      "tipo_empresa": _tipoEmpresaSeleccionado!,
+      "giro": giroController.text.trim(),
       "representante": representanteController.text.trim(),
       "cargo": cargoController.text.trim(),
       "telefono": telefonoController.text.trim(),
       "email": emailController.text.trim(),
-      "giro": giroController.text.trim(),
+      "direccion": direccionController.text.trim(),
       "necesidad_detectada": necesidadController.text.trim(),
-      "ciudad": ciudadController.text.trim(),
-      "modo_contacto": modoContactoController.text.trim(),
+      "producto_servicio_interes": productoServicioController.text.trim(),
+      "proxima_cita": proximaCitaController.text.trim(),
+      "modo_contacto": _modoContactoSeleccionado!,
     };
 
     try {
@@ -82,7 +124,7 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
         _clearControllers();
       } else {
         setState(() {
-          _message = responseData['message'] ?? 'Error al registrar empresa: ${response.body}';
+          _message = responseData['message'] ?? 'Error al registrar empresa';
         });
       }
     } catch (e) {
@@ -94,14 +136,19 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
 
   void _clearControllers() {
     empresaController.clear();
+    giroController.clear();
     representanteController.clear();
     cargoController.clear();
     telefonoController.clear();
     emailController.clear();
-    giroController.clear();
+    direccionController.clear();
     necesidadController.clear();
-    ciudadController.clear();
-    modoContactoController.clear();
+    productoServicioController.clear();
+    proximaCitaController.clear();
+    setState(() {
+      _tipoEmpresaSeleccionado = null;
+      _modoContactoSeleccionado = null;
+    });
   }
 
   @override
@@ -114,28 +161,111 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
           key: _formKey,
           child: Column(
             children: [
-              _buildTextField(empresaController, 'Nombre de la Empresa'),
-              _buildTextField(representanteController, 'Representante'),
-              _buildTextField(cargoController, 'Cargo'),
-              _buildTextField(
-                telefonoController,
-                'Teléfono',
-                keyboardType: TextInputType.phone,
-                validator: _validateTelefono,
+              // 1. Empresa (Obligatorio)
+              _buildTextField(empresaController, 'Nombre de la Empresa', validator: _campoObligatorio),
+
+              const SizedBox(height: 12),
+
+              // 2. Tipo de empresa (dropdown obligatorio)
+              DropdownButtonFormField<String>(
+                value: _tipoEmpresaSeleccionado,
+                decoration: const InputDecoration(
+                  labelText: 'Tipo de Empresa',
+                  border: OutlineInputBorder(),
+                ),
+                items: tiposEmpresa.map((tipo) {
+                  return DropdownMenuItem<String>(
+                    value: tipo['value'],
+                    child: Text(tipo['value']!), // Mostrar siglas
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _tipoEmpresaSeleccionado = value;
+                  });
+                },
+                validator: (value) => value == null ? 'Seleccione un tipo de empresa' : null,
               ),
-              _buildTextField(emailController, 'Correo Electrónico', keyboardType: TextInputType.emailAddress),
+
+              const SizedBox(height: 12),
+
+              // 3. Giro (Opcional)
               _buildTextField(giroController, 'Giro Empresarial'),
-              _buildTextField(necesidadController, 'Necesidad Detectada'),
-              _buildTextField(ciudadController, 'Ciudad'),
-              _buildTextField(modoContactoController, 'Modo de Contacto'),
-              const SizedBox(height: 20),
+
+              const SizedBox(height: 12),
+
+              // 4. Nombre representante (Obligatorio)
+              _buildTextField(representanteController, 'Nombre del Representante', validator: _campoObligatorio),
+
+              const SizedBox(height: 12),
+
+              // 5. Cargo (Opcional)
+              _buildTextField(cargoController, 'Cargo'),
+
+              const SizedBox(height: 12),
+
+              // 6. Teléfono (Obligatorio)
+              _buildTextField(telefonoController, 'Teléfono', keyboardType: TextInputType.phone, validator: _campoObligatorio),
+
+              const SizedBox(height: 12),
+
+              // 7. Correo electrónico (Opcional)
+              _buildTextField(emailController, 'Correo Electrónico', keyboardType: TextInputType.emailAddress, validator: _validarEmailOpcional),
+
+              const SizedBox(height: 12),
+
+              // 8. Dirección (Opcional)
+              _buildTextField(direccionController, 'Dirección Completa'),
+
+              const SizedBox(height: 12),
+
+              // 9. Necesidad detectada (Obligatorio)
+              _buildTextField(necesidadController, 'Necesidad Detectada', validator: _campoObligatorio),
+
+              const SizedBox(height: 12),
+
+              // 10. Producto/Servicio de interés (Opcional)
+              _buildTextField(productoServicioController, 'Producto/Servicio de Interés'),
+
+              const SizedBox(height: 12),
+
+              // 11. Agendamiento cita (Opcional)
+              _buildTextField(proximaCitaController, 'Agendamiento de Cita'),
+
+              const SizedBox(height: 16),
+
+              // Modo de contacto (dropdown obligatorio)
+              DropdownButtonFormField<String>(
+                value: _modoContactoSeleccionado,
+                decoration: const InputDecoration(
+                  labelText: 'Modo de Contacto',
+                  border: OutlineInputBorder(),
+                ),
+                items: modosContacto.map((modo) {
+                  return DropdownMenuItem<String>(
+                    value: modo['value'],
+                    child: Text(modo['value']!), // Mostrar siglas
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _modoContactoSeleccionado = value;
+                  });
+                },
+                validator: (value) => value == null ? 'Seleccione un modo de contacto' : null,
+              ),
+
+              const SizedBox(height: 24),
+
               _isLoading
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
                 onPressed: _guardarEmpresa,
                 child: const Text('Guardar Empresa/Cliente'),
               ),
+
               const SizedBox(height: 16),
+
               if (_message.isNotEmpty)
                 Text(
                   _message,
@@ -162,16 +292,26 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
           border: const OutlineInputBorder(),
         ),
         keyboardType: keyboardType,
-        validator: validator ?? (value) => (value == null || value.isEmpty) ? 'Campo requerido' : null,
+        validator: validator ?? (value) => null, // Por defecto no obligatorio
       ),
     );
   }
 
-  String? _validateTelefono(String? value) {
-    if (value == null || value.isEmpty) {
+  String? _campoObligatorio(String? value) {
+    if (value == null || value.trim().isEmpty) {
       return 'Campo requerido';
     }
-    final regex = RegExp(r'^\+?[\d\s\-]{7,15}$');
-    return regex.hasMatch(value) ? null : 'Número de teléfono inválido';
+    return null;
+  }
+
+  String? _validarEmailOpcional(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Opcional
+    }
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    if (!emailRegex.hasMatch(value.trim())) {
+      return 'Correo electrónico inválido';
+    }
+    return null;
   }
 }

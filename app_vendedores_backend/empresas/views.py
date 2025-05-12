@@ -16,8 +16,8 @@ class EmpresaRegistroView(APIView):
 
         # Validar campos requeridos
         required_fields = [
-            'nombre_empresa', 'tipo_empresa', 'giro', 'representante',
-            'cargo', 'telefono', 'ciudad', 'modo_contacto', 'necesidad_detectada', 'email'
+            'nombre_empresa', 'tipo_empresa', 'representante',
+            'telefono','modo_contacto', 'necesidad_detectada',
         ]
         
         missing_fields = [field for field in required_fields if field not in data]
@@ -92,11 +92,6 @@ class EmpresaRegistroView(APIView):
             fail_silently=False,
         )
 
-
-### ✅ **Nueva vista para `/api/login/`**
-Aquí está una implementación básica de autenticación:
-
-```python
 from django.contrib.auth import authenticate
 
 class LoginView(APIView):

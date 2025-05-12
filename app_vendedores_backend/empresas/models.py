@@ -51,7 +51,9 @@ class Empresa(models.Model):
     cargo = models.CharField(
         max_length=255,
         verbose_name='Cargo del Representante',
-        help_text='Puesto del representante en la empresa'
+        help_text='Puesto del representante en la empresa',
+        blank=True,
+        null=True
     )
 
     email = models.EmailField(
@@ -64,7 +66,9 @@ class Empresa(models.Model):
     telefono = models.CharField(
         max_length=20,
         verbose_name='Teléfono de Contacto',
-        help_text='Número con código de país y área'
+        help_text='Número con código de país y área',
+        blank=True,
+        null=True
     )
 
     modo_contacto = models.CharField(
@@ -78,12 +82,16 @@ class Empresa(models.Model):
     ciudad = models.CharField(
         max_length=100,
         verbose_name='Ciudad',
-        help_text='Ciudad donde opera la empresa'
+        help_text='Ciudad donde opera la empresa',
+        blank=True,
+        null=True
     )
 
     direccion = models.TextField(
         verbose_name='Dirección Completa',
-        help_text='Domicilio fiscal o comercial'
+        help_text='Domicilio fiscal o comercial',
+        blank=True,
+        null=True
     )
 
     # Información comercial
@@ -137,11 +145,11 @@ class Empresa(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.nombre_empresa} ({self.get_tipo_empresa_display()}) - {self.ciudad}"
+        return f"{self.nombre_empresa} ({self.get_tipo_empresa_display()}) - {self.ciudad or 'Sin ciudad'}"
 
     @property
     def contacto_completo(self):
-        return f"{self.representante} ({self.cargo}) - {self.telefono}"
+        return f"{self.representante} ({self.cargo or 'Sin cargo'}) - {self.telefono or 'Sin teléfono'}"
 
     @property
     def tiene_cita_programada(self):

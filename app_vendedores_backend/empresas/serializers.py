@@ -13,3 +13,4 @@ class EmpresaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Empresa
         fields = ['nombre_empresa', 'representante', 'cargo', 'telefono', 'ciudad', 'modo_contacto', 'email']
+
