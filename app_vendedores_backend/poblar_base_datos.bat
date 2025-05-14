@@ -1,3 +1,4 @@
-python manage.py makemigrations usuarios empresas
+if exist db.sqlite3 del db.sqlite3
+python manage.py makemigrations usuarios empresas tarifarios
 python manage.py migrate
-python manage.py shell < poblar_base_datos.py
+python poblar_base_datos.py

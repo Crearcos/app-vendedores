@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app_vendedores_frontend/administrador/gestionar_usuarios.dart';
+import 'package:app_vendedores_frontend/administrador/gestionar_planes.dart';
+import 'package:app_vendedores_frontend/administrador/gestionar_tarifarios.dart';
 
 class AdminScreen extends StatelessWidget {
   final String adminEmail; // Guardar el correo del administrador en sesión
@@ -26,6 +28,28 @@ class AdminScreen extends StatelessWidget {
                 );
               },
               child: const Text("Gestionar usuarios"),
+            ),
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ManagePlansScreen()),
+                );
+              },
+              child: const Text("Gestionar planes"),
+            ),
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ManageTarifariosScreen()),
+                );
+              },
+              child: const Text("Gestionar tarifarios"),
             ),
           ],
         ),
