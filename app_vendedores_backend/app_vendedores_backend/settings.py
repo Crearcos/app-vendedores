@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'rest_framework',  # Django REST Framework
     'corsheaders',     # CORS para peticiones HTTP
     'usuarios',        # Aplicación de usuarios
-    'empresas',  # Nuestra nueva app para manejar empresas
+    'empresas',  # App para manejar empresas
+    'tarifarios',  # App para manejar tarifarios
 ]
 
 MIDDLEWARE = [
