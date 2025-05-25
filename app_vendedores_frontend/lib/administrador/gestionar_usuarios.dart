@@ -5,12 +5,12 @@ import 'dart:convert';
 import 'dart:io';
 
 class ManageUsersScreen extends StatefulWidget {
-  final String adminEmail; // Correo del administrador en sesión
+  final String adminEmail;
 
   const ManageUsersScreen({super.key, required this.adminEmail});
 
   @override
-  _ManageUsersScreenState createState() => _ManageUsersScreenState();
+  State<ManageUsersScreen> createState() => _ManageUsersScreenState();
 }
 
 class _ManageUsersScreenState extends State<ManageUsersScreen> {

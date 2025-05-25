@@ -7,16 +7,17 @@ class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+  ForgotPasswordScreenState createState() => ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+// Cambiar el nombre de la clase a pública
+class ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   String _message = '';
   bool _hasSentEmail = false; // Indica si el correo ya fue enviado una vez
   bool _isLoading = false; // Estado para bloquear el botón mientras se espera la respuesta
 
-  // Determinar la URL del backend según la plataforma
+  // Hacer el método público
   String getApiUrl() {
     if (Platform.isAndroid) {
       return 'http://10.0.2.2:8000/api/reset_password/'; // Para emulador Android

@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'dart:io';
 
 class RegistroEmpresaPage extends StatefulWidget {
-  const RegistroEmpresaPage({Key? key}) : super(key: key);
+  const RegistroEmpresaPage({super.key});
 
   @override
-  _RegistroEmpresaPageState createState() => _RegistroEmpresaPageState();
+  RegistroEmpresaPageState createState() => RegistroEmpresaPageState();
 }
 
-class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
+class RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // Controladores para campos de texto
@@ -24,6 +24,7 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
   final TextEditingController necesidadController = TextEditingController();
   final TextEditingController productoServicioController = TextEditingController();
   final TextEditingController proximaCitaController = TextEditingController();
+  final TextEditingController notasCitaController = TextEditingController();
 
   // Listas para dropdowns (tipo empresa y modo contacto)
   final List<Map<String, String>> tiposEmpresa = [
@@ -105,6 +106,7 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
       "producto_servicio_interes": productoServicioController.text.trim(),
       "proxima_cita": proximaCitaController.text.trim(),
       "modo_contacto": _modoContactoSeleccionado!,
+      "notas_cita": notasCitaController.text.trim(),
     };
 
     try {
@@ -161,7 +163,7 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
           key: _formKey,
           child: Column(
             children: [
-              // 1. Empresa (Obligatorio)
+              // 1. Empresa (ObligatorempresaControllerio)
               _buildTextField(empresaController, 'Nombre de la Empresa', validator: _campoObligatorio),
 
               const SizedBox(height: 12),
@@ -230,7 +232,24 @@ class _RegistroEmpresaPageState extends State<RegistroEmpresaPage> {
               const SizedBox(height: 12),
 
               // 11. Agendamiento cita (Opcional)
-              _buildTextField(proximaCitaController, 'Agendamiento de Cita'),
+              TextField(
+                controller: proximaCitaController,
+                decoration: const InputDecoration(
+                  labelText: 'Fecha y Hora de la Cita',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // 12. Notas adicionales (Opcional)
+              TextField(
+                controller: notasCitaController,
+                decoration: const InputDecoration(
+                  labelText: 'Notas Adicionales',
+                  border: OutlineInputBorder(),
+                ),
+              ),
 
               const SizedBox(height: 16),
 

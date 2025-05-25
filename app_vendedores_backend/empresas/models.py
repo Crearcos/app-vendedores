@@ -12,6 +12,20 @@ class Empresa(models.Model):
         ('OTRO', 'Otro tipo de organización'),
     ]
 
+    # Agendamiento de citas
+    proxima_cita = models.DateTimeField(
+        verbose_name='Próxima Cita',
+        help_text='Fecha y hora de la próxima cita programada',
+        blank=True,
+        null=True
+    )
+    notas_cita = models.TextField(
+        verbose_name='Notas de la Cita',
+        help_text='Observaciones o preparación para la próxima cita',
+        blank=True,
+        null=True
+    )
+    
     # Modos de contacto disponibles
     MODO_CONTACTO_CHOICES = [
         ('EMAIL', 'Correo Electrónico'),
