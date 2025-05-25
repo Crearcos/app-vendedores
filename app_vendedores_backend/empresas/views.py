@@ -93,7 +93,7 @@ class EmpresaRegistroView(APIView):
             [empresa.email],
             fail_silently=False,
         )
- class EmpresaEditView(APIView):
+class EmpresaEditView(APIView):
     def post(self, request, pk):
         try:
             empresa = Empresa.objects.get(pk=pk)
