@@ -6,7 +6,8 @@ class RegisterTarifarioScreen extends StatefulWidget {
   const RegisterTarifarioScreen({super.key});
 
   @override
-  _RegisterTarifarioScreenState createState() => _RegisterTarifarioScreenState();
+  @override
+  State<RegisterTarifarioScreen> createState() => _RegisterTarifarioScreenState();
 }
 
 class _RegisterTarifarioScreenState extends State<RegisterTarifarioScreen> {
@@ -80,7 +81,13 @@ class _RegisterTarifarioScreenState extends State<RegisterTarifarioScreen> {
       );
 
       if (response.statusCode == 201) {
-        Navigator.pop(context);
+        setState(() {
+          _errorMessage = "Tarifario registrado exitosamente";
+        });
+        await Future.delayed(const Duration(seconds: 1));
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
       } else {
         setState(() {
           _errorMessage = "Error al registrar tarifario";
