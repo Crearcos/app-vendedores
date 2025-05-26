@@ -7,10 +7,10 @@ class RegisterPlanScreen extends StatefulWidget {
   const RegisterPlanScreen({super.key});
 
   @override
-  _RegisterPlanScreenState createState() => _RegisterPlanScreenState();
+  RegisterPlanScreenState createState() => RegisterPlanScreenState();
 }
 
-class _RegisterPlanScreenState extends State<RegisterPlanScreen> {
+class RegisterPlanScreenState extends State<RegisterPlanScreen> {
   final TextEditingController _nameController = TextEditingController();
   bool _isLoading = false;
   String _message = '';
@@ -42,7 +42,9 @@ class _RegisterPlanScreenState extends State<RegisterPlanScreen> {
         setState(() {
           _message = "Plan registrado exitosamente";
         });
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
+        }
       } else {
         setState(() {
           _message = "Error al registrar el plan";
