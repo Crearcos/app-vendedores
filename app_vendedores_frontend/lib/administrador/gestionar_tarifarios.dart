@@ -81,17 +81,17 @@ class _ManageTarifariosScreenState extends State<ManageTarifariosScreen> {
 
   void _showEditDialog(Map<String, dynamic> tarifario) {
     String selectedPlan = tarifario['plan_nombre'];
-    final TextEditingController _duracionController =
+    final TextEditingController duracionController =
     TextEditingController(text: tarifario['duracion']);
-    final TextEditingController _costoTotalMinController =
+    final TextEditingController costoTotalMinController =
     TextEditingController(text: tarifario['costo_total_minimo'].toString());
-    final TextEditingController _costoTotalMaxController =
+    final TextEditingController costoTotalMaxController =
     TextEditingController(text: tarifario['costo_total_maximo'].toString());
-    final TextEditingController _costoMensualMinController =
+    final TextEditingController costoMensualMinController =
     TextEditingController(text: tarifario['costo_mensual_minimo'].toString());
-    final TextEditingController _costoMensualMaxController =
+    final TextEditingController costoMensualMaxController =
     TextEditingController(text: tarifario['costo_mensual_maximo'].toString());
-    final TextEditingController _notasController =
+    final TextEditingController notasController =
     TextEditingController(text: tarifario['notas']);
 
     showDialog(
@@ -119,36 +119,36 @@ class _ManageTarifariosScreenState extends State<ManageTarifariosScreen> {
               ),
               const SizedBox(height: 12),
               TextField(
-                controller: _duracionController,
+                controller: duracionController,
                 decoration: const InputDecoration(labelText: "Duración"),
               ),
               const SizedBox(height: 12),
               TextField(
-                controller: _costoTotalMinController,
+                controller: costoTotalMinController,
                 decoration: const InputDecoration(labelText: "Costo total mínimo"),
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 12),
               TextField(
-                controller: _costoTotalMaxController,
+                controller: costoTotalMaxController,
                 decoration: const InputDecoration(labelText: "Costo total máximo"),
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 12),
               TextField(
-                controller: _costoMensualMinController,
+                controller: costoMensualMinController,
                 decoration: const InputDecoration(labelText: "Costo mensual mínimo"),
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 12),
               TextField(
-                controller: _costoMensualMaxController,
+                controller: costoMensualMaxController,
                 decoration: const InputDecoration(labelText: "Costo mensual máximo"),
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 12),
               TextField(
-                controller: _notasController,
+                controller: notasController,
                 decoration: const InputDecoration(labelText: "Notas"),
               ),
             ],
@@ -163,12 +163,12 @@ class _ManageTarifariosScreenState extends State<ManageTarifariosScreen> {
                 _editTarifario(
                   tarifario['id'],
                   selectedPlan,
-                  _duracionController.text, // **Nuevo campo**
-                  _costoTotalMinController.text,
-                  _costoTotalMaxController.text,
-                  _costoMensualMinController.text,
-                  _costoMensualMaxController.text,
-                  _notasController.text,
+                  duracionController.text, // **Nuevo campo**
+                  costoTotalMinController.text,
+                  costoTotalMaxController.text,
+                  costoMensualMinController.text,
+                  costoMensualMaxController.text,
+                  notasController.text,
                 );
                 Navigator.pop(context);
               },
