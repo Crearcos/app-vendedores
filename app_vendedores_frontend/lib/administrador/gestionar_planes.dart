@@ -8,10 +8,10 @@ class ManagePlansScreen extends StatefulWidget {
   const ManagePlansScreen({super.key});
 
   @override
-  _ManagePlansScreenState createState() => _ManagePlansScreenState();
+  ManagePlansScreenState createState() => ManagePlansScreenState();
 }
 
-class _ManagePlansScreenState extends State<ManagePlansScreen> {
+class ManagePlansScreenState extends State<ManagePlansScreen> {
   List<Map<String, dynamic>> _planes = [];
   bool _isLoading = true;
   String _errorMessage = '';

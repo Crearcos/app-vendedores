@@ -8,10 +8,10 @@ class ManageTarifariosScreen extends StatefulWidget {
   const ManageTarifariosScreen({super.key});
 
   @override
-  _ManageTarifariosScreenState createState() => _ManageTarifariosScreenState();
+  ManageTarifariosScreenState createState() => ManageTarifariosScreenState();
 }
 
-class _ManageTarifariosScreenState extends State<ManageTarifariosScreen> {
+class ManageTarifariosScreenState extends State<ManageTarifariosScreen> {
   List<Map<String, dynamic>> _tarifarios = [];
   bool _isLoading = true;
   String _errorMessage = '';
