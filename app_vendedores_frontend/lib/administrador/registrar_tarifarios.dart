@@ -21,13 +21,13 @@ class _RegisterTarifarioScreenState extends State<RegisterTarifarioScreen> {
   String _errorMessage = '';
   List<String> _planes = [];
   String _selectedPlan = "";
-  bool _isLoading = true;
+  bool _isLoadingPlanes = true;
 
   @override
   void initState() {
     super.initState();
     _fetchPlanes();
-    _isLoading = false;
+    _isLoadingPlanes = false;
   }
 
   Future<void> _fetchPlanes() async {
@@ -101,8 +101,8 @@ class _RegisterTarifarioScreenState extends State<RegisterTarifarioScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Registrar Tarifario')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator()) // Ocultar hasta que carguen los planes
+      body: _isLoadingPlanes
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -174,7 +174,7 @@ class _RegisterTarifarioScreenState extends State<RegisterTarifarioScreen> {
             const SizedBox(height: 16),
 
             if (_errorMessage.isNotEmpty)
-              Text(_errorMessage, style: const TextStyle(color: Colors.blue)),
+              Text(_errorMessage, style: const TextStyle(color: Colors.red)),
           ],
         ),
       ),
