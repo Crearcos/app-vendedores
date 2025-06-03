@@ -2,8 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:app_vendedores_frontend/administrador/adminMain.dart';
-import 'package:app_vendedores_frontend/vendedor/vendedorMain.dart';
+import 'package:app_vendedores_frontend/administrador/admin_main.dart';
 import 'package:app_vendedores_frontend/recuperar_contrasena.dart';
 
 void main() {
@@ -28,7 +27,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -61,21 +60,27 @@ class _LoginScreenState extends State<LoginScreen> {
       final data = jsonDecode(decodedResponse);
       int status = data["status"];
 
-      if (status == 0) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AdminScreen(adminEmail: _emailController.text)));
-      } else if (status == 1) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const SellerScreen()));
+      if (mounted) { // Verificar si el widget está montado
+        if (status == 0) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AdminScreen(adminEmail: _emailController.text)));
+        } else if (status == 1) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const SellerScreen()));
+        }
       }
     } else if (response.statusCode == 400) {
       final decodedResponse = utf8.decode(response.bodyBytes);
       final data = jsonDecode(decodedResponse);
-      setState(() {
-        _errorMessage = data["message"]; // Mostrar el mensaje de error de Django
-      });
+      if (mounted) { // Verificar si el widget está montado
+        setState(() {
+          _errorMessage = data["message"]; // Mostrar el mensaje de error de Django
+        });
+      }
     } else {
-      setState(() {
-        _errorMessage = "Error de conexión con el servidor";
-      });
+      if (mounted) { // Verificar si el widget está montado
+        setState(() {
+          _errorMessage = "Error de conexión con el servidor";
+        });
+      }
     }
   }
 
@@ -124,6 +129,37 @@ class _LoginScreenState extends State<LoginScreen> {
               child: const Text('¿Ha olvidado la contraseña?', style: TextStyle(color: Colors.blue)),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SellerScreen extends StatelessWidget {
+  const SellerScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // No hacer nada para deshabilitar clics
+      },
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Vendedor')),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Vendedor', style: TextStyle(fontSize: 24)),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  // Navegar a la página de registro de empresa
+                },
+                child: const Text("Registrar nueva empresa"),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -8,10 +8,10 @@ class ManagePlansScreen extends StatefulWidget {
   const ManagePlansScreen({super.key});
 
   @override
-  _ManagePlansScreenState createState() => _ManagePlansScreenState();
+  ManagePlansScreenState createState() => ManagePlansScreenState();
 }
 
-class _ManagePlansScreenState extends State<ManagePlansScreen> {
+class ManagePlansScreenState extends State<ManagePlansScreen> {
   List<Map<String, dynamic>> _planes = [];
   bool _isLoading = true;
   String _errorMessage = '';
@@ -58,7 +58,7 @@ class _ManagePlansScreenState extends State<ManagePlansScreen> {
   }
 
   void _showEditDialog(Map<String, dynamic> plan) {
-    final TextEditingController _nameController = TextEditingController(text: plan['nombre']);
+    final TextEditingController nameController = TextEditingController(text: plan['nombre']);
 
     showDialog(
       context: context,
@@ -66,7 +66,7 @@ class _ManagePlansScreenState extends State<ManagePlansScreen> {
         return AlertDialog(
           title: const Text("Editar Plan"),
           content: TextField(
-            controller: _nameController,
+            controller: nameController,
             decoration: const InputDecoration(labelText: "Nuevo nombre del plan"),
           ),
           actions: [
@@ -76,7 +76,7 @@ class _ManagePlansScreenState extends State<ManagePlansScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                _editPlan(plan['id'], _nameController.text);
+                _editPlan(plan['id'], nameController.text);
                 Navigator.pop(context);
               },
               child: const Text("Guardar cambios"),

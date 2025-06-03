@@ -18,6 +18,7 @@ class EmpresaRegistroView(APIView):
         required_fields = [
             'nombre_empresa', 'tipo_empresa', 'representante',
             'telefono','modo_contacto', 'necesidad_detectada',
+            'proxima_cita', 'notas_cita'  # Nuevos campos
         ]
         
         missing_fields = [field for field in required_fields if field not in data]
@@ -57,7 +58,8 @@ class EmpresaRegistroView(APIView):
                     "empresa": empresa.nombre_empresa,
                     "representante": empresa.representante,
                     "contacto_completo": empresa.contacto_completo,
-                    "proxima_cita": empresa.proxima_cita
+                    "proxima_cita": empresa.proxima_cita,
+                    "notas_cita": empresa.notas_cita  # Incluir notas
                 }
             }, status=status.HTTP_201_CREATED)
         
@@ -91,6 +93,17 @@ class EmpresaRegistroView(APIView):
             [empresa.email],
             fail_silently=False,
         )
+class EmpresaEditView(APIView):
+    def post(self, request, pk):
+        try:
+            empresa = Empresa.objects.get(pk=pk)
+        except Empresa.DoesNotExist:
+            return Response({"status": -1, "message": "Empresa no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = EmpresaSerializer(empresa, data=request.data, partial=True)  # Permitir actualizaciones parciales
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)   
 
 from django.contrib.auth import authenticate
 
