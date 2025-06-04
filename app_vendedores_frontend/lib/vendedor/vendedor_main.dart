@@ -29,10 +29,6 @@ class SellerScreen extends StatelessWidget {
               },
               child: const Text("Registrar nueva empresa"),
             ),
-            Text(
-              'Este es un texto que no se puede seleccionar.',
-              style: TextStyle(fontSize: 16),
-            )
           ],
         ),
       ),

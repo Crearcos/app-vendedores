@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:app_vendedores_frontend/administrador/admin_main.dart';
+import 'package:app_vendedores_frontend/vendedor/vendedor_main.dart';
 import 'package:app_vendedores_frontend/recuperar_contrasena.dart';
 
 void main() {
@@ -129,37 +130,6 @@ class _LoginScreenState extends State<LoginScreen> {
               child: const Text('¿Ha olvidado la contraseña?', style: TextStyle(color: Colors.blue)),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class SellerScreen extends StatelessWidget {
-  const SellerScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // No hacer nada para deshabilitar clics
-      },
-      child: Scaffold(
-        appBar: AppBar(title: const Text('Vendedor')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Vendedor', style: TextStyle(fontSize: 24)),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Navegar a la página de registro de empresa
-                },
-                child: const Text("Registrar nueva empresa"),
-              ),
-            ],
-          ),
         ),
       ),
     );
