@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from tarifarios.models import Plan, Tarifario, Paquete, Accion
+from tarifarios.models import Plan, Tarifario, Paquete, Accion, Solucion
 
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,3 +33,10 @@ class PaqueteSerializer(serializers.ModelSerializer):
             "soporte", "entregables", "kpis_sugeridos",
             "precio_minimo", "precio_maximo", "acciones"
         ]
+
+class SolucionSerializer(serializers.ModelSerializer):
+    paquetes = PaqueteSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Solucion
+        fields = ["id", "nombre", "descripcion", "paquetes"]

@@ -35,3 +35,11 @@ class Paquete(models.Model):
 
     def __str__(self):
         return f"Paquete {self.plan.nombre} - {self.duracion}"
+
+class Solucion(models.Model):
+    nombre = models.CharField(max_length=255, unique=True)
+    descripcion = models.TextField()
+    paquetes = models.ManyToManyField(Paquete, related_name="soluciones")
+
+    def __str__(self):
+        return self.nombre

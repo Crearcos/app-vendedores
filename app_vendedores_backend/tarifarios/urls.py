@@ -2,6 +2,7 @@ from django.urls import path
 from .views import PlanListView, CreatePlanView, EditPlanView, DeletePlanView
 from .views import TarifarioListView, CreateTarifarioView, EditTarifarioView, DeleteTarifarioView
 from .views import PaqueteListView, CreatePaqueteView, EditPaqueteView, DeletePaqueteView
+from .views import ListarSolucionesView, CrearSolucionView, EditarSolucionView, EliminarSolucionView
 
 urlpatterns = [
     path('listar_planes/', PlanListView.as_view(), name='listar_planes'),
@@ -16,4 +17,8 @@ urlpatterns = [
     path('crear_paquete/', CreatePaqueteView.as_view(), name='crear_paquete'),
     path('editar_paquete/', EditPaqueteView.as_view(), name='editar_paquete'),
     path('eliminar_paquete/', DeletePaqueteView.as_view(), name='eliminar_paquete'),
+    path("listar_soluciones/", ListarSolucionesView.as_view(), name="listar_soluciones"),
+    path("crear_solucion/", CrearSolucionView.as_view(), name="crear_solucion"),
+    path("editar_solucion/", EditarSolucionView.as_view(), name="editar_solucion"),
+    path("eliminar_solucion/", EliminarSolucionView.as_view(), name="eliminar_solucion"),
 ]

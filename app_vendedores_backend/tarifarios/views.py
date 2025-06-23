@@ -1,10 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from tarifarios.models import Tarifario, Plan, Paquete, Accion
+from tarifarios.models import Tarifario, Plan, Paquete, Accion, Solucion
 from tarifarios.serializers import PlanSerializer
 from tarifarios.serializers import TarifarioSerializer
 from tarifarios.serializers import PaqueteSerializer
+from tarifarios.serializers import SolucionSerializer
 
 # metodos para listar, crear, editar y eliminar planes
 class PlanListView(APIView):
@@ -172,3 +173,65 @@ class DeletePaqueteView(APIView):
             return Response({"message": "Paquete eliminado correctamente"}, status=status.HTTP_200_OK)
         except Paquete.DoesNotExist:
             return Response({"message": "El paquete no existe"}, status=status.HTTP_400_BAD_REQUEST)
+        
+# metodos para listar, crear, editar y eliminar soluciones
+class ListarSolucionesView(APIView):
+    def get(self, request):
+        soluciones = Solucion.objects.all()
+        serializer = SolucionSerializer(soluciones, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class CrearSolucionView(APIView):
+    def post(self, request):
+        try:
+            nombre = request.data.get("nombre")
+            descripcion = request.data.get("descripcion")
+            paquete_ids = request.data.get("paquetes", [])  # lista de IDs
+
+            solucion = Solucion.objects.create(nombre=nombre, descripcion=descripcion)
+
+            for paquete_id in paquete_ids:
+                paquete = Paquete.objects.get(id=paquete_id)
+                solucion.paquetes.add(paquete)
+
+            serializer = SolucionSerializer(solucion)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except Paquete.DoesNotExist:
+            return Response({"message": "Alguno de los paquetes no existe."}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class EditarSolucionView(APIView):
+    def post(self, request):
+        try:
+            solucion = Solucion.objects.get(id=request.data.get("id"))
+            solucion.nombre = request.data.get("nombre", solucion.nombre)
+            solucion.descripcion = request.data.get("descripcion", solucion.descripcion)
+
+            # Reemplazar todos los paquetes asociados
+            paquete_ids = request.data.get("paquetes", [])
+            solucion.paquetes.clear()
+            for paquete_id in paquete_ids:
+                paquete = Paquete.objects.get(id=paquete_id)
+                solucion.paquetes.add(paquete)
+
+            solucion.save()
+            serializer = SolucionSerializer(solucion)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Solucion.DoesNotExist:
+            return Response({"message": "La solución no existe"}, status=status.HTTP_400_BAD_REQUEST)
+        except Paquete.DoesNotExist:
+            return Response({"message": "Uno de los paquetes no existe"}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class EliminarSolucionView(APIView):
+    def post(self, request):
+        try:
+            solucion = Solucion.objects.get(id=request.data.get("id"))
+            solucion.delete()
+            return Response({"message": "Solución eliminada correctamente"}, status=status.HTTP_200_OK)
+        except Solucion.DoesNotExist:
+            return Response({"message": "La solución no existe"}, status=status.HTTP_400_BAD_REQUEST)

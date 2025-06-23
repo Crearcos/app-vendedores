@@ -3,6 +3,7 @@ import 'package:app_vendedores_frontend/administrador/gestionar_usuarios.dart';
 import 'package:app_vendedores_frontend/administrador/gestionar_planes.dart';
 import 'package:app_vendedores_frontend/administrador/gestionar_tarifarios.dart';
 import 'package:app_vendedores_frontend/administrador/gestionar_paquetes.dart';
+import 'package:app_vendedores_frontend/administrador/gestionar_soluciones.dart';
 
 class AdminScreen extends StatelessWidget {
   final String adminEmail; // Guardar el correo del administrador en sesión
@@ -62,6 +63,17 @@ class AdminScreen extends StatelessWidget {
                 );
               },
               child: const Text("Gestionar paquetes"),
+            ),
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ManageSolucionScreen()),
+                );
+              },
+              child: const Text("Gestionar soluciones"),
             ),
           ],
         ),

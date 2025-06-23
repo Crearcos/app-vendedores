@@ -7,7 +7,7 @@ django.setup()
 
 from django.contrib.auth.models import User
 from usuarios.models import UserProfile
-from tarifarios.models import Plan, Tarifario, Paquete, Accion
+from tarifarios.models import Plan, Tarifario, Paquete, Accion, Solucion
 from empresas.models import Empresa
 
 # Crear usuario administrador con correo y contraseña
@@ -209,6 +209,47 @@ empresa = Empresa.objects.create(nombre_empresa="CARBONO NEUTRAL", tipo_empresa=
 empresa = Empresa.objects.create(nombre_empresa="FINCA DOMONTI", tipo_empresa="PYME", representante="DANIEL DOBRONSKI",cargo="FUNDADOR", email="fincadomonti@outlook.com",modo_contacto="WHATSAPP", telefono="0998113842")
 empresa = Empresa.objects.create(nombre_empresa="LOGUN S.A.", tipo_empresa="PYME", representante="THALIA ALVARADO",cargo="TBUSINESS EXECUTIVE",email= "talvarado@grupoholco.com", modo_contacto="WHATSAPP", telefono="0968060501")
 print("Empresas creadas exitosamente.")
+
+# Asignar paquetes por plan y duración
+paquetes_pyme = Paquete.objects.filter(plan__nombre="Pyme")
+paquetes_crecimiento = Paquete.objects.filter(plan__nombre="Crecimiento")
+paquetes_estrategico = Paquete.objects.filter(plan__nombre="Estratégico")
+
+# Crear soluciones
+sol1 = Solucion.objects.create(
+    nombre="Presencia Digital Inicial",
+    descripcion="Orientada a emprendedores y startups que buscan lanzar su marca y generar visibilidad básica en línea."
+)
+sol1.paquetes.add(*paquetes_pyme)
+
+sol2 = Solucion.objects.create(
+    nombre="Expansión Comercial",
+    descripcion="Ideal para negocios que ya operan y desean escalar su base de clientes con estrategias de captación y fidelización."
+)
+sol2.paquetes.add(*paquetes_crecimiento)
+
+sol3 = Solucion.objects.create(
+    nombre="Estrategia Digital Integral",
+    descripcion="Dirigida a empresas con visión de largo plazo que requieren una estrategia robusta, omnicanal y tecnología a medida."
+)
+sol3.paquetes.add(*paquetes_estrategico)
+
+sol4 = Solucion.objects.create(
+    nombre="Marketing Estacional",
+    descripcion="Diseñada para campañas por temporada como regreso a clases, fin de año o Black Friday."
+)
+sol4.paquetes.add(paquetes_crecimiento.filter(duracion__icontains="6 meses").first())
+sol4.paquetes.add(paquetes_pyme.filter(duracion__icontains="6 meses").first())
+
+sol5 = Solucion.objects.create(
+    nombre="Transformación Digital Corporativa",
+    descripcion="Solución especializada para empresas tradicionales que quieren adoptar herramientas digitales avanzadas."
+)
+sol5.paquetes.add(
+    paquetes_estrategico.filter(duracion__icontains="1 año").first(),
+    paquetes_crecimiento.filter(duracion__icontains="1 año").first()
+)
+print("Soluciones creadas exitosamente.")
 time.sleep(1)
 print("Base de datos poblada exitosamente.")
 time.sleep(1)
