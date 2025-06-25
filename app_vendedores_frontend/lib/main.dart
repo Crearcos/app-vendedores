@@ -36,17 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   String _errorMessage = '';
 
-  // Determinar la URL del backend según la plataforma
-  String getApiUrl() {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/login/'; // Para emulador Android
-    } else {
-      return 'http://127.0.0.1:8000/api/login/'; // Para escritorio o navegador
-    }
-  }
-
   Future<void> _login() async {
-    final String apiUrl = getApiUrl(); // Obtiene la URL correcta
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/login/'
+        : 'http://127.0.0.1:8000/api/login/'; // Obtiene la URL correcta
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},
@@ -63,9 +56,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (mounted) { // Verificar si el widget está montado
         if (status == 0) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AdminScreen(adminEmail: _emailController.text)));
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AdminScreen(adminEmail: _emailController.text))
+          ).then((_) {
+            setState(() {
+              _errorMessage = ""; // Limpiar el mensaje de error
+            });
+          });
         } else if (status == 1) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const SellerScreen()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SellerScreen())
+          ).then((_) {
+            setState(() {
+              _errorMessage = ""; // Limpiar el mensaje de error
+            });
+          });
         }
       }
     } else if (response.statusCode == 400) {

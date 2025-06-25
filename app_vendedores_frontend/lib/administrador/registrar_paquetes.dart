@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -33,9 +35,10 @@ class _RegisterPaqueteScreenState extends State<RegisterPaqueteScreen> {
   }
 
   Future<void> _fetchPlanes() async {
-    final String apiUrl = 'http://127.0.0.1:8000/api/tarifarios/listar_planes/';
-
     try {
+      final String apiUrl = Platform.isAndroid
+          ? 'http://10.0.2.2:8000/api/tarifarios/listar_planes/'
+          : 'http://127.0.0.1:8000/api/tarifarios/listar_planes/';
       final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
@@ -69,8 +72,9 @@ class _RegisterPaqueteScreenState extends State<RegisterPaqueteScreen> {
       _isLoadingButton = true;
     });
 
-    final String apiUrl = 'http://127.0.0.1:8000/api/tarifarios/crear_paquete/';
-
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/crear_paquete/'
+        : 'http://127.0.0.1:8000/api/tarifarios/crear_paquete/';
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},

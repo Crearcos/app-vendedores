@@ -22,20 +22,12 @@ class ManagePlansScreenState extends State<ManagePlansScreen> {
     _fetchPlanes();
   }
 
-  String getApiUrl() {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/tarifarios/listar_planes/'; // Para emulador Android
-    } else {
-      return 'http://127.0.0.1:8000/api/tarifarios/listar_planes/'; // Para escritorio o navegador
-    }
-  }
-
   Future<void> _fetchPlanes() async {
-    final String apiUrl = getApiUrl();
-
     try {
+      final String apiUrl = Platform.isAndroid
+          ? 'http://10.0.2.2:8000/api/tarifarios/listar_planes/'
+          : 'http://127.0.0.1:8000/api/tarifarios/listar_planes/';
       final response = await http.get(Uri.parse(apiUrl));
-
       if (response.statusCode == 200) {
         final decodedResponse = utf8.decode(response.bodyBytes);
         final List<dynamic> data = jsonDecode(decodedResponse);
@@ -87,17 +79,10 @@ class ManagePlansScreenState extends State<ManagePlansScreen> {
     );
   }
 
-  String getApiUrlEditPlan() {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/tarifarios/editar_plan/'; // Para emulador Android
-    } else {
-      return 'http://127.0.0.1:8000/api/tarifarios/editar_plan/'; // Para escritorio o navegador
-    }
-  }
-
   Future<void> _editPlan(int planId, String newName) async {
-    final String apiUrl = getApiUrlEditPlan();
-
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/editar_plan/'
+        : 'http://127.0.0.1:8000/api/tarifarios/editar_plan/';
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},
@@ -148,16 +133,10 @@ class ManagePlansScreenState extends State<ManagePlansScreen> {
     );
   }
 
-  String getApiUrlDeletePlan() {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/tarifarios/eliminar_plan/'; // Para emulador Android
-    } else {
-      return 'http://127.0.0.1:8000/api/tarifarios/eliminar_plan/'; // Para escritorio o navegador
-    }
-  }
-
   Future<void> _deletePlan(int planId) async {
-    final String apiUrl = getApiUrlDeletePlan();
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/eliminar_plan/'
+        : 'http://127.0.0.1:8000/api/tarifarios/eliminar_plan/';
 
     final response = await http.post(
       Uri.parse(apiUrl),

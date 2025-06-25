@@ -24,18 +24,11 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     _fetchUsers();
   }
 
-  String getApiUrlFetchUsers() {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/users/'; // Para emulador Android
-    } else {
-      return 'http://127.0.0.1:8000/api/users/'; // Para escritorio o navegador
-    }
-  }
-
   Future<void> _fetchUsers() async {
-    final String apiUrl = getApiUrlFetchUsers();  // Ruta del backend para obtener usuarios
-
     try {
+      final String apiUrl = Platform.isAndroid
+          ? 'http://10.0.2.2:8000/api/users/'
+          : 'http://127.0.0.1:8000/api/users/';
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
         final decodedResponse = utf8.decode(response.bodyBytes);
@@ -58,16 +51,10 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     }
   }
 
-  String getApiUrlEditUsers() {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/edit_user/'; // Para emulador Android
-    } else {
-      return 'http://127.0.0.1:8000/api/edit_user/'; // Para escritorio o navegador
-    }
-  }
-
   Future<void> _editUser(String email, String newUsername, String newRole) async {
-    final String apiUrl = getApiUrlEditUsers();
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/edit_user/'
+        : 'http://127.0.0.1:8000/api/edit_user/';
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},
@@ -135,14 +122,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     );
   }
 
-  String getApiUrlDeleteUsers() {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/delete_user/'; // Para emulador Android
-    } else {
-      return 'http://127.0.0.1:8000/api/delete_user/'; // Para escritorio o navegador
-    }
-  }
-
   Future<void> _deleteUser(String email) async {
     if (email == widget.adminEmail) {
       setState(() {
@@ -151,7 +130,9 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
       return;
     }
 
-    final String apiUrl = getApiUrlDeleteUsers();
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/delete_user/'
+        : 'http://127.0.0.1:8000/api/delete_user/';
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -25,9 +26,10 @@ class _ManageSolucionScreenState extends State<ManageSolucionScreen> {
     setState(() {
       _isLoading = true;
     });
-
-    final url = Uri.parse(
-        "http://127.0.0.1:8000/api/tarifarios/listar_soluciones/");
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/listar_soluciones/'
+        : 'http://127.0.0.1:8000/api/tarifarios/listar_soluciones/';
+    final url = Uri.parse(apiUrl);
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -52,8 +54,10 @@ class _ManageSolucionScreenState extends State<ManageSolucionScreen> {
   }
 
   void _eliminarSolucion(int id) async {
-    final url = Uri.parse(
-        "http://127.0.0.1:8000/api/tarifarios/eliminar_solucion/");
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/eliminar_solucion/'
+        : 'http://127.0.0.1:8000/api/tarifarios/eliminar_solucion/';
+    final url = Uri.parse(apiUrl);
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -92,7 +96,10 @@ class _ManageSolucionScreenState extends State<ManageSolucionScreen> {
   }
 
   void _editarSolucion(int id, String nombre, String descripcion, List<int> paqueteIds) async {
-    final url = Uri.parse("http://127.0.0.1:8000/api/tarifarios/editar_solucion/");
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/editar_solucion/'
+        : 'http://127.0.0.1:8000/api/tarifarios/editar_solucion/';
+    final url = Uri.parse(apiUrl);
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -123,7 +130,10 @@ class _ManageSolucionScreenState extends State<ManageSolucionScreen> {
     };
 
     // Cargar todos los paquetes disponibles
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/tarifarios/listar_paquetes/'));
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/listar_paquetes/'
+        : 'http://127.0.0.1:8000/api/tarifarios/listar_paquetes/';
+    final response = await http.get(Uri.parse(apiUrl));
     if (response.statusCode == 200) {
       final decoded = utf8.decode(response.bodyBytes);
       final data = jsonDecode(decoded) as List<dynamic>;

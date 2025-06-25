@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -24,9 +25,11 @@ class _RegisterSolucionScreenState extends State<RegisterSolucionScreen> {
   }
 
   Future<void> _fetchPaquetes() async {
-    final url = Uri.parse("http://127.0.0.1:8000/api/tarifarios/listar_paquetes/");
     try {
-      final response = await http.get(url);
+      final String apiUrl = Platform.isAndroid
+          ? 'http://10.0.2.2:8000/api/tarifarios/listar_paquetes/'
+          : 'http://127.0.0.1:8000/api/tarifarios/listar_paquetes/';
+      final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
         final decoded = utf8.decode(response.bodyBytes);
         final List<dynamic> data = jsonDecode(decoded);
@@ -49,11 +52,14 @@ class _RegisterSolucionScreenState extends State<RegisterSolucionScreen> {
   }
 
   Future<void> _registrarSolucion() async {
-    final url = Uri.parse("http://127.0.0.1:8000/api/tarifarios/crear_solucion/");
     setState(() {
       _message = "";
     });
 
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/crear_solucion/'
+        : 'http://127.0.0.1:8000/api/tarifarios/crear_solucion/';
+    final url = Uri.parse(apiUrl);
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},

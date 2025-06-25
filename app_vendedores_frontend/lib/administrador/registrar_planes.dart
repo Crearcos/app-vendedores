@@ -15,21 +15,15 @@ class RegisterPlanScreenState extends State<RegisterPlanScreen> {
   bool _isLoading = false;
   String _message = '';
 
-  String getApiUrl() {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/tarifarios/crear_plan/'; // Para emulador Android
-    } else {
-      return 'http://127.0.0.1:8000/api/tarifarios/crear_plan/'; // Para escritorio o navegador
-    }
-  }
-
   Future<void> _registerPlan() async {
     setState(() {
       _isLoading = true; // Bloquear el botón antes de la petición
     });
-    final String apiUrl = getApiUrl();
 
     try {
+      final String apiUrl = Platform.isAndroid
+          ? 'http://10.0.2.2:8000/api/tarifarios/crear_plan/'
+          : 'http://127.0.0.1:8000/api/tarifarios/crear_plan/';
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {"Content-Type": "application/json"},

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -23,11 +24,11 @@ class _ManagePaquetesScreenState extends State<ManagePaquetesScreen> {
   }
 
   Future<void> _fetchPaquetes() async {
-    final String apiUrl = 'http://127.0.0.1:8000/api/tarifarios/listar_paquetes/';
-
     try {
+      final String apiUrl = Platform.isAndroid
+          ? 'http://10.0.2.2:8000/api/tarifarios/listar_paquetes/'
+          : 'http://127.0.0.1:8000/api/tarifarios/listar_paquetes/';
       final response = await http.get(Uri.parse(apiUrl));
-
       if (response.statusCode == 200) {
         final decodedResponse = utf8.decode(response.bodyBytes);
         final List<dynamic> data = jsonDecode(decodedResponse);
@@ -86,7 +87,9 @@ class _ManagePaquetesScreenState extends State<ManagePaquetesScreen> {
   }
 
   void _deletePaquete(int paqueteId) async {
-    final String apiUrl = 'http://127.0.0.1:8000/api/tarifarios/eliminar_paquete/';
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/eliminar_paquete/'
+        : 'http://127.0.0.1:8000/api/tarifarios/eliminar_paquete/';
 
     final response = await http.post(
       Uri.parse(apiUrl),
@@ -239,7 +242,9 @@ class _ManagePaquetesScreenState extends State<ManagePaquetesScreen> {
       int paqueteId, String duracion, String idealPara, String soporte, String entregables,
       String kpisSugeridos, String precioMinimo, String precioMaximo, List<Map<String, dynamic>> acciones
       ) async {
-    final String apiUrl = 'http://127.0.0.1:8000/api/tarifarios/editar_paquete/';
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/editar_paquete/'
+        : 'http://127.0.0.1:8000/api/tarifarios/editar_paquete/';
 
     final response = await http.post(
       Uri.parse(apiUrl),

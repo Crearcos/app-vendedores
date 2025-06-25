@@ -17,20 +17,13 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   String _selectedRole = "administrador"; // Valor por defecto
   String _message = '';
 
-  String getApiUrl() {
-    if (Platform.isAndroid) {
-      return 'http://10.0.2.2:8000/api/register/'; // Para emulador Android
-    } else {
-      return 'http://127.0.0.1:8000/api/register/'; // Para escritorio o navegador
-    }
-  }
-
   Future<void> _registerUser() async {
     setState(() {
       _isLoading = true; // Bloquear el botón antes de la petición
     });
-    final String apiUrl = getApiUrl(); // Obtiene la URL correcta
-
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/register/'
+        : 'http://127.0.0.1:8000/api/register/';
     try {
       final response = await http.post(
         Uri.parse(apiUrl),

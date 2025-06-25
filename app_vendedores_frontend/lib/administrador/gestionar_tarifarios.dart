@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 import 'package:app_vendedores_frontend/administrador/registrar_tarifarios.dart';
 
 class ManageTarifariosScreen extends StatefulWidget {
@@ -27,8 +28,9 @@ class ManageTarifariosScreenState extends State<ManageTarifariosScreen> {
   }
 
   Future<void> _fetchPlanes() async {
-    final String apiUrl = 'http://127.0.0.1:8000/api/tarifarios/listar_planes/';
-
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/listar_planes/'
+        : 'http://127.0.0.1:8000/api/tarifarios/listar_planes/';
     try {
       final response = await http.get(Uri.parse(apiUrl));
 
@@ -56,9 +58,10 @@ class ManageTarifariosScreenState extends State<ManageTarifariosScreen> {
   }
 
   Future<void> _fetchTarifarios() async {
-    final String apiUrl = 'http://127.0.0.1:8000/api/tarifarios/listar_tarifarios/';
-
     try {
+      final String apiUrl = Platform.isAndroid
+          ? 'http://10.0.2.2:8000/api/tarifarios/listar_tarifarios/'
+          : 'http://127.0.0.1:8000/api/tarifarios/listar_tarifarios/';
       final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
@@ -190,8 +193,9 @@ class ManageTarifariosScreenState extends State<ManageTarifariosScreen> {
       String costoMensualMaximo,
       String notas,
       ) async {
-    final String apiUrl = 'http://127.0.0.1:8000/api/tarifarios/editar_tarifario/';
-
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/editar_tarifario/'
+        : 'http://127.0.0.1:8000/api/tarifarios/editar_tarifario/';
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},
@@ -253,8 +257,9 @@ class ManageTarifariosScreenState extends State<ManageTarifariosScreen> {
   }
 
   void _deleteTarifario(int tarifarioId) async {
-    final String apiUrl = 'http://127.0.0.1:8000/api/tarifarios/eliminar_tarifario/';
-
+    final String apiUrl = Platform.isAndroid
+        ? 'http://10.0.2.2:8000/api/tarifarios/eliminar_tarifario/'
+        : 'http://127.0.0.1:8000/api/tarifarios/eliminar_tarifario/';
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {"Content-Type": "application/json"},

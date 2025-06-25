@@ -2,6 +2,10 @@ import 'package:app_vendedores_frontend/websocket_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_vendedores_frontend/vendedor/registrar_empresa.dart';
+import 'package:app_vendedores_frontend/vendedor/consultar_planes.dart';
+import 'package:app_vendedores_frontend/vendedor/consultar_paquetes.dart';
+import 'package:app_vendedores_frontend/vendedor/consultar_soluciones.dart';
+import 'package:app_vendedores_frontend/vendedor/consultar_tarifarios.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 class SellerScreen extends StatelessWidget {
@@ -28,6 +32,50 @@ class SellerScreen extends StatelessWidget {
                 );
               },
               child: const Text("Registrar nueva empresa"),
+            ),
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ManagePlansScreen()),
+                );
+              },
+              child: const Text("Consultar planes"),
+            ),
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ManageTarifariosScreen()),
+                );
+              },
+              child: const Text("Consultar tarifarios"),
+            ),
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ManagePaquetesScreen()),
+                );
+              },
+              child: const Text("Consultar paquetes"),
+            ),
+            const SizedBox(height: 16),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ManageSolucionScreen()),
+                );
+              },
+              child: const Text("Consultar soluciones"),
             ),
           ],
         ),
