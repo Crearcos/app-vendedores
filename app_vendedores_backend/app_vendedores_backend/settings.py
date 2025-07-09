@@ -37,6 +37,13 @@ EMAIL_HOST_USER = 'soporte@crearcos.com'  # Tu dirección de correo
 EMAIL_HOST_PASSWORD = '1GXuZMJ*7PeW8)kU'  # Usa una contraseña de aplicación en lugar de la normal !!
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # Dirección predeterminada para enviar correos
 
+import os
+# Para manejar archivos estáticos de usuario
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Ruta específica para el catálogo dentro de /media/
+CATALOGO_PATH = os.path.join(MEDIA_ROOT, 'catalogo')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -51,6 +58,7 @@ INSTALLED_APPS = [
     'usuarios',        # Aplicación de usuarios
     'empresas',  # App para manejar empresas
     'tarifarios',  # App para manejar tarifarios
+    'catalogo',  # App para manejar catálogo de productos
 ]
 
 MIDDLEWARE = [
