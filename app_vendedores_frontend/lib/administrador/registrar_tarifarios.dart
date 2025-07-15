@@ -7,7 +7,6 @@ class RegisterTarifarioScreen extends StatefulWidget {
   const RegisterTarifarioScreen({super.key});
 
   @override
-  @override
   State<RegisterTarifarioScreen> createState() => _RegisterTarifarioScreenState();
 }
 
