@@ -19,16 +19,6 @@ class SellerScreen extends StatelessWidget {
           children: [
             const Text('Vendedor', style: TextStyle(fontSize: 24)),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RegistroEmpresaPage()),
-                );
-              },
-              child: const Text("Registrar nueva empresa"),
-            ),
-            const SizedBox(height: 16),
 
             ElevatedButton(
               onPressed: () {
@@ -82,6 +72,16 @@ class SellerScreen extends StatelessWidget {
                 );
               },
               child: const Text("Consultar catálogo"),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RegistroEmpresaPage()),
+                );
+              },
+              child: const Text("Registrar nueva empresa"),
             ),
           ],
         ),
